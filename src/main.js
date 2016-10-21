@@ -26,6 +26,10 @@ function mainUpdate(deltaMs) {
 function mainDraw(interpolationPercentage) {
     let width = canvas.clientWidth;
     let height = canvas.clientHeight;
+    if(canvas.width != width || canvas.height != height) {
+        canvas.width = width;
+        canvas.height = height;
+    }
     //context.fillStyle = "#222222";
     //context.fillRect(0, 0, width, height);
     let count = 0;
