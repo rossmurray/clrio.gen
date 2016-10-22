@@ -1,19 +1,24 @@
 import * as mainLoop from "mainloop.js";
 import * as husl from "husl";
-import "./utility.js";
-import core from "./core.js";
+import "./core/utility.js";
+import core from "./core/core.js";
+import settings from "./settings.js";
+import Circles from "./content/circles.js";
+import Screen from "./core/screen.js";
 
-var context;
-var canvas;
+var circles;
+var screen;
 
 function main() {
-    canvas = document.getElementById('canvas');
-    context = canvas.getContext('2d');
-    let width = canvas.clientWidth;
-    let height = canvas.clientHeight;
+    const canvas = document.getElementById('canvas');
+    const context = canvas.getContext('2d');
+    const width = canvas.clientWidth;
+    const height = canvas.clientHeight;
     canvas.width = width;
     canvas.height = height;
 
+    screen = new Screen(canvas, context);
+    circles = new Circles(settings.numCircles);
     mainLoop.setUpdate(mainUpdate);
     mainLoop.setDraw(mainDraw);
     mainLoop.setEnd(mainEnd);
@@ -21,28 +26,14 @@ function main() {
 }
 
 function mainUpdate(deltaMs) {
+    circles.update();
 }
 
 function mainDraw(interpolationPercentage) {
-    let width = canvas.clientWidth;
-    let height = canvas.clientHeight;
-    if(canvas.width != width || canvas.height != height) {
-        canvas.width = width;
-        canvas.height = height;
-    }
-    //context.fillStyle = "#222222";
-    //context.fillRect(0, 0, width, height);
-    let count = 0;
-    let n = 600;
-    for(count = 0; count < 100; count++) {
-        let x = core.randomInt(0, width);
-        let y = core.randomInt(0, height);
-        let h = core.randomNumber(0, 360);
-        let s = core.randomNumber(20, 100);
-        let l = core.randomNumber(45, 75);
-        let color = husl.toHex(h, s, l);
-        context.circle(x, y, 9, color)
-    }
+    screen.resize();
+    screen.clear(settings.bgColor);
+
+    circles.draw(screen);
 }
 
 function mainEnd(fps, panic) {
