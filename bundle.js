@@ -54,29 +54,27 @@
 
 	var husl = _interopRequireWildcard(_husl);
 
-	__webpack_require__(5);
+	var _utility = __webpack_require__(5);
 
-	var _core = __webpack_require__(6);
+	var utility = _interopRequireWildcard(_utility);
 
-	var _core2 = _interopRequireDefault(_core);
-
-	var _settings = __webpack_require__(7);
+	var _settings = __webpack_require__(6);
 
 	var _settings2 = _interopRequireDefault(_settings);
 
-	var _circles = __webpack_require__(8);
-
-	var _circles2 = _interopRequireDefault(_circles);
-
-	var _screen = __webpack_require__(10);
+	var _screen = __webpack_require__(7);
 
 	var _screen2 = _interopRequireDefault(_screen);
+
+	var _scene = __webpack_require__(8);
+
+	var _scene2 = _interopRequireDefault(_scene);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
-	var circles;
+	var scene;
 	var screen;
 
 	function main() {
@@ -88,7 +86,7 @@
 	    canvas.height = height;
 
 	    screen = new _screen2.default(canvas, context);
-	    circles = new _circles2.default(_settings2.default.numCircles);
+	    scene = new _scene2.default();
 	    mainLoop.setUpdate(mainUpdate);
 	    mainLoop.setDraw(mainDraw);
 	    mainLoop.setEnd(mainEnd);
@@ -96,27 +94,14 @@
 	}
 
 	function mainUpdate(deltaMs) {
-	    circles.update(deltaMs);
+	    scene.update();
 	}
 
 	function mainDraw(interpolationPercentage) {
 	    screen.resize();
 	    screen.clear(_settings2.default.bgColor);
 
-	    circles.draw(screen);
-
-	    //hello world:
-	    // let count = 0;
-	    // let n = 600;
-	    // for(count = 0; count < 100; count++) {
-	    //     let x = core.randomInt(0, width);
-	    //     let y = core.randomInt(0, height);
-	    //     let h = core.randomNumber(0, 360);
-	    //     let s = core.randomNumber(20, 100);
-	    //     let l = core.randomNumber(45, 75);
-	    //     let color = husl.toHex(h, s, l);
-	    //     context.circle(x, y, 9, color)
-	    // }
+	    scene.draw(screen);
 	}
 
 	function mainEnd(fps, panic) {
@@ -560,117 +545,21 @@
 
 	"use strict";
 
-	CanvasRenderingContext2D.prototype.circle = function (x, y, r, fillStyle) {
-	    this.beginPath();
-	    this.arc(x, y, r, 0, 2 * Math.PI, false);
-	    if (fillStyle) {
-	        this.fillStyle = fillStyle;
-	    }
-	    this.fill();
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	exports.randomInt = randomInt;
+	exports.randomNumber = randomNumber;
+	function randomInt(min, max) {
+	    return Math.floor(Math.random() * (max - min)) + min;
 	};
 
-	CanvasRenderingContext2D.prototype.drawLine = function (x, y, length, radians, strokeStyle, lineWidth) {
-	    var x2 = x + length * Math.cos(radians);
-	    var y2 = y + length * Math.sin(radians);
-	    this.beginPath();
-	    this.moveTo(x, y);
-	    this.lineTo(x2, y2);
-	    if (strokeStyle) {
-	        this.strokeStyle = strokeStyle;
-	    }
-	    if (lineWidth) {
-	        this.lineWidth = lineWidth;
-	    }
-	    this.stroke();
+	function randomNumber(min, max) {
+	    return Math.random() * (max - min) + min;
 	};
 
 /***/ },
 /* 6 */
-/***/ function(module, exports) {
-
-	"use strict";
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	var core = function () {
-	    function core() {
-	        _classCallCheck(this, core);
-	    }
-
-	    _createClass(core, null, [{
-	        key: "linear",
-	        value: function linear(x) {
-	            return x % 1;
-	        }
-
-	        //todo generate using fft?
-
-	    }, {
-	        key: "sawtooth",
-	        value: function sawtooth(x) {
-	            return linear(x);
-	        }
-	    }, {
-	        key: "saw",
-	        value: function saw(x) {
-	            return sawtooth(x);
-	        }
-	    }, {
-	        key: "sine",
-	        value: function sine(x) {
-	            return Math.sin(x * Math.PI * 2) * 0.5 + 0.5;
-	        }
-	    }, {
-	        key: "triangle",
-	        value: function triangle(x) {
-	            return Math.abs((0.5 + x) % 1 - 0.5) * 2;
-	        }
-	    }, {
-	        key: "square",
-	        value: function square(x) {
-	            Math.sign(wavecore.sine(x));
-	        }
-	    }, {
-	        key: "round",
-	        value: function round(x) {
-	            var rad = Math.PI / 2;
-	            var down = 3 * rad;
-	            var turn = x % 1 * rad;
-	            return 1 + Math.sin(down + turn);
-	        }
-
-	        //linear from 1 (exclusive) down to 0 (inclusive)
-
-	    }, {
-	        key: "reverse",
-	        value: function reverse(x) {
-	            return 1 - Number.EPSILON - x;
-	        }
-	    }, {
-	        key: "randomInt",
-	        value: function randomInt(min, max) {
-	            return Math.floor(Math.random() * (max - min)) + min;
-	        }
-	    }, {
-	        key: "randomNumber",
-	        value: function randomNumber(min, max) {
-	            return Math.random() * (max - min) + min;
-	        }
-	    }]);
-
-	    return core;
-	}();
-
-	exports.default = core;
-
-/***/ },
-/* 7 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -686,6 +575,131 @@
 	exports.default = settings;
 
 /***/ },
+/* 7 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var Screen = function () {
+	    function Screen(canvas, context) {
+	        _classCallCheck(this, Screen);
+
+	        this.canvas = canvas;
+	        this.context = context;
+	    }
+
+	    _createClass(Screen, [{
+	        key: "clear",
+	        value: function clear(color) {
+	            this.context.fillStyle = color;
+	            this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
+	        }
+	    }, {
+	        key: "resize",
+	        value: function resize() {
+	            var width = this.canvas.clientWidth;
+	            var height = this.canvas.clientHeight;
+	            if (this.canvas.width != width || this.canvas.height != height) {
+	                this.canvas.width = width;
+	                this.canvas.height = height;
+	            }
+	        }
+	    }, {
+	        key: "drawCircles",
+	        value: function drawCircles(circles) {
+	            var _iteratorNormalCompletion = true;
+	            var _didIteratorError = false;
+	            var _iteratorError = undefined;
+
+	            try {
+	                for (var _iterator = circles[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+	                    var circle = _step.value;
+
+	                    drawCircle(this.context, circle.x, circle.y, circle.r, circle.color);
+	                }
+	            } catch (err) {
+	                _didIteratorError = true;
+	                _iteratorError = err;
+	            } finally {
+	                try {
+	                    if (!_iteratorNormalCompletion && _iterator.return) {
+	                        _iterator.return();
+	                    }
+	                } finally {
+	                    if (_didIteratorError) {
+	                        throw _iteratorError;
+	                    }
+	                }
+	            }
+	        }
+	    }, {
+	        key: "drawLines",
+	        value: function drawLines(lines) {
+	            var _iteratorNormalCompletion2 = true;
+	            var _didIteratorError2 = false;
+	            var _iteratorError2 = undefined;
+
+	            try {
+	                for (var _iterator2 = lines[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+	                    var line = _step2.value;
+
+	                    drawLine(this.context, line.x, line.y, line.radians, line.length);
+	                }
+	            } catch (err) {
+	                _didIteratorError2 = true;
+	                _iteratorError2 = err;
+	            } finally {
+	                try {
+	                    if (!_iteratorNormalCompletion2 && _iterator2.return) {
+	                        _iterator2.return();
+	                    }
+	                } finally {
+	                    if (_didIteratorError2) {
+	                        throw _iteratorError2;
+	                    }
+	                }
+	            }
+	        }
+	    }]);
+
+	    return Screen;
+	}();
+
+	function drawCircle(context, x, y, r, fillStyle) {
+	    context.beginPath();
+	    context.arc(x, y, r, 0, 2 * Math.PI, false);
+	    if (fillStyle) {
+	        context.fillStyle = fillStyle;
+	    }
+	    context.fill();
+	};
+
+	function drawLine(context, x, y, length, radians, strokeStyle, lineWidth) {
+	    var x2 = x + length * Math.cos(radians);
+	    var y2 = y + length * Math.sin(radians);
+	    context.beginPath();
+	    context.moveTo(x, y);
+	    context.lineTo(x2, y2);
+	    if (strokeStyle) {
+	        context.strokeStyle = strokeStyle;
+	    }
+	    if (lineWidth) {
+	        context.lineWidth = lineWidth;
+	    }
+	    context.stroke();
+	};
+
+	exports.default = Screen;
+
+/***/ },
 /* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -697,13 +711,61 @@
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _circle = __webpack_require__(9);
+	var _settings = __webpack_require__(6);
+
+	var _settings2 = _interopRequireDefault(_settings);
+
+	var _circles = __webpack_require__(9);
+
+	var _circles2 = _interopRequireDefault(_circles);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var Scene = function () {
+	    function Scene() {
+	        _classCallCheck(this, Scene);
+
+	        this.circles = new _circles2.default(_settings2.default.numCircles);
+	    }
+
+	    _createClass(Scene, [{
+	        key: "update",
+	        value: function update() {
+	            this.circles.update();
+	        }
+	    }, {
+	        key: "draw",
+	        value: function draw(screen) {
+	            this.circles.draw(screen);
+	        }
+	    }]);
+
+	    return Scene;
+	}();
+
+	exports.default = Scene;
+
+/***/ },
+/* 9 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _circle = __webpack_require__(10);
 
 	var _circle2 = _interopRequireDefault(_circle);
 
-	var _core = __webpack_require__(6);
+	var _utility = __webpack_require__(5);
 
-	var _core2 = _interopRequireDefault(_core);
+	var utility = _interopRequireWildcard(_utility);
 
 	var _husl = __webpack_require__(2);
 
@@ -726,7 +788,7 @@
 
 	    _createClass(Circles, [{
 	        key: "update",
-	        value: function update(deltaMs) {
+	        value: function update() {
 	            var _iteratorNormalCompletion = true;
 	            var _didIteratorError = false;
 	            var _iteratorError = undefined;
@@ -735,11 +797,11 @@
 	                for (var _iterator = this.circleData[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
 	                    var circle = _step.value;
 
-	                    circle.x = _core2.default.randomInt(0, 1000);
-	                    circle.y = _core2.default.randomInt(0, 800);
-	                    var h = _core2.default.randomNumber(0, 360);
-	                    var s = _core2.default.randomNumber(40, 100);
-	                    var l = _core2.default.randomNumber(45, 85);
+	                    circle.x = utility.randomInt(0, 1000);
+	                    circle.y = utility.randomInt(0, 800);
+	                    var h = utility.randomNumber(0, 360);
+	                    var s = utility.randomNumber(40, 100);
+	                    var l = utility.randomNumber(45, 85);
 	                    var color = husl.toHex(h, s, l);
 	                    circle.color = color;
 	                    circle.r = 5;
@@ -772,7 +834,7 @@
 	exports.default = Circles;
 
 /***/ },
-/* 9 */
+/* 10 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -793,107 +855,6 @@
 	};
 
 	exports.default = Circle;
-
-/***/ },
-/* 10 */
-/***/ function(module, exports) {
-
-	"use strict";
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	var screen = function () {
-	    function screen(canvas, context) {
-	        _classCallCheck(this, screen);
-
-	        this.canvas = canvas;
-	        this.context = context;
-	    }
-
-	    _createClass(screen, [{
-	        key: "clear",
-	        value: function clear(color) {
-	            this.context.fillStyle = color;
-	            this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
-	        }
-	    }, {
-	        key: "resize",
-	        value: function resize() {
-	            var width = this.canvas.clientWidth;
-	            var height = this.canvas.clientHeight;
-	            if (this.canvas.width != width || this.canvas.height != height) {
-	                this.canvas.width = width;
-	                this.canvas.height = height;
-	            }
-	        }
-	    }, {
-	        key: "drawCircles",
-	        value: function drawCircles(circles) {
-	            var _iteratorNormalCompletion = true;
-	            var _didIteratorError = false;
-	            var _iteratorError = undefined;
-
-	            try {
-	                for (var _iterator = circles[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-	                    var circle = _step.value;
-
-	                    this.context.circle(circle.x, circle.y, circle.r, circle.color);
-	                }
-	            } catch (err) {
-	                _didIteratorError = true;
-	                _iteratorError = err;
-	            } finally {
-	                try {
-	                    if (!_iteratorNormalCompletion && _iterator.return) {
-	                        _iterator.return();
-	                    }
-	                } finally {
-	                    if (_didIteratorError) {
-	                        throw _iteratorError;
-	                    }
-	                }
-	            }
-	        }
-	    }, {
-	        key: "drawLines",
-	        value: function drawLines(lines) {
-	            var _iteratorNormalCompletion2 = true;
-	            var _didIteratorError2 = false;
-	            var _iteratorError2 = undefined;
-
-	            try {
-	                for (var _iterator2 = lines[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-	                    var line = _step2.value;
-
-	                    this.context.drawLine(line.x, line.y, line.radians, line.length);
-	                }
-	            } catch (err) {
-	                _didIteratorError2 = true;
-	                _iteratorError2 = err;
-	            } finally {
-	                try {
-	                    if (!_iteratorNormalCompletion2 && _iterator2.return) {
-	                        _iterator2.return();
-	                    }
-	                } finally {
-	                    if (_didIteratorError2) {
-	                        throw _iteratorError2;
-	                    }
-	                }
-	            }
-	        }
-	    }]);
-
-	    return screen;
-	}();
-
-	exports.default = screen;
 
 /***/ }
 /******/ ]);
