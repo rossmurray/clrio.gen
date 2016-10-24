@@ -1,4 +1,4 @@
-const screen = class screen {
+const Screen = class Screen {
     constructor(canvas, context) {
         this.canvas = canvas;
         this.context = context;
@@ -20,15 +20,39 @@ const screen = class screen {
 
     drawCircles(circles) {
         for(const circle of circles) {
-            this.context.circle(circle.x, circle.y, circle.r, circle.color);
+            drawCircle(this.context, circle.x, circle.y, circle.r, circle.color);
         }
     }
 
     drawLines(lines) {
         for(const line of lines) {
-            this.context.drawLine(line.x, line.y, line.radians, line.length)
+            drawLine(this.context, line.x, line.y, line.radians, line.length);
         }
     }
 };
 
-export default screen;
+function drawCircle(context, x, y, r, fillStyle) {
+    context.beginPath();
+    context.arc(x, y, r, 0, 2 * Math.PI, false);
+    if (fillStyle) {
+        context.fillStyle = fillStyle;
+    }
+    context.fill();
+};
+
+function drawLine(context, x, y, length, radians, strokeStyle, lineWidth) {
+    var x2 = x + length * Math.cos(radians);
+    var y2 = y + length * Math.sin(radians);
+    context.beginPath();
+    context.moveTo(x, y);
+    context.lineTo(x2, y2);
+    if (strokeStyle) {
+        context.strokeStyle = strokeStyle;
+    }
+    if (lineWidth) {
+        context.lineWidth = lineWidth;
+    }
+    context.stroke();
+};
+
+export default Screen;

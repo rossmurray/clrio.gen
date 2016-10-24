@@ -1,3 +1,12 @@
+let wave = build;
+wave.linear = linear;
+wave.sawtooth = sawtooth;
+wave.sine = sine;
+wave.triangle = triangle;
+wave.square = square;
+wave.round = round;
+wave.reverse = reverse;
+export default wave;
 
 /**
  * config options:
@@ -83,14 +92,3 @@ function round(x) {
 function reverse(x) {
     return 1 - Number.EPSILON - x;
 }
-
-let wave = build;
-expo.linear = linear;
-expo.sawtooth = sawtooth;
-expo.sine = sine;
-expo.triangle = triangle;
-expo.square = square;
-expo.round = round;
-expo.reverse = reverse;
-
-export default wave;

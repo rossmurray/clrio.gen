@@ -1,12 +1,11 @@
 import * as mainLoop from "mainloop.js";
 import * as husl from "husl";
-import "./core/utility.js";
-import core from "./core/core.js";
+import * as utility from "./core/utility.js";
 import settings from "./settings.js";
-import Circles from "./content/circles.js";
 import Screen from "./core/screen.js";
+import Scene from "./scene/scene.js";
 
-var circles;
+var scene;
 var screen;
 
 function main() {
@@ -18,7 +17,7 @@ function main() {
     canvas.height = height;
 
     screen = new Screen(canvas, context);
-    circles = new Circles(settings.numCircles);
+    scene = new Scene();
     mainLoop.setUpdate(mainUpdate);
     mainLoop.setDraw(mainDraw);
     mainLoop.setEnd(mainEnd);
@@ -26,14 +25,14 @@ function main() {
 }
 
 function mainUpdate(deltaMs) {
-    circles.update();
+    scene.update();
 }
 
 function mainDraw(interpolationPercentage) {
     screen.resize();
     screen.clear(settings.bgColor);
 
-    circles.draw(screen);
+    scene.draw(screen);
 }
 
 function mainEnd(fps, panic) {

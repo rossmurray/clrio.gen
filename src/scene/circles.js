@@ -1,5 +1,5 @@
 import Circle from "./circle.js";
-import core from "../core/core.js";
+import * as utility from "../core/utility.js";
 import * as husl from "husl";
 
 const Circles = class Circles {
@@ -9,11 +9,11 @@ const Circles = class Circles {
 
     update() {
         for(const circle of this.circleData) {
-            circle.x = core.randomInt(0, 1000);
-            circle.y = core.randomInt(0, 800);
-            const h = core.randomNumber(0, 360);
-            const s = core.randomNumber(40, 100);
-            const l = core.randomNumber(45, 85);
+            circle.x = utility.randomInt(0, 1000);
+            circle.y = utility.randomInt(0, 800);
+            const h = utility.randomNumber(0, 360);
+            const s = utility.randomNumber(40, 100);
+            const l = utility.randomNumber(45, 85);
             const color = husl.toHex(h, s, l);
             circle.color = color;
             circle.r = 5;
