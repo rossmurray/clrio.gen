@@ -2,6 +2,8 @@ const Screen = class Screen {
     constructor(canvas, context) {
         this.canvas = canvas;
         this.context = context;
+        this.width = canvas.width;
+        this.height = canvas.height;
     }
 
     clear(color) {
@@ -15,6 +17,8 @@ const Screen = class Screen {
         if(this.canvas.width != width || this.canvas.height != height) {
             this.canvas.width = width;
             this.canvas.height = height;
+            this.width = width;
+            this.height = height;
         }
     }
 

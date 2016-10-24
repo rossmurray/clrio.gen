@@ -1,3 +1,5 @@
+import * as timeKeeper from "./timeKeeper.js";
+
 let wave = build;
 wave.linear = linear;
 wave.sawtooth = sawtooth;
@@ -6,6 +8,7 @@ wave.triangle = triangle;
 wave.square = square;
 wave.round = round;
 wave.reverse = reverse;
+wave.time = time;
 export default wave;
 
 /**
@@ -59,6 +62,10 @@ function build(carrier, config) {
     return result;
 }
 
+function time(x) {
+    return timeKeeper.getTimeProgress(x);
+}
+
 function linear(x) {
     return x % 1;
 }
@@ -76,6 +83,7 @@ function triangle(x) {
     return Math.abs(((0.5 + x) % 1) - 0.5) * 2;
 }
 
+//todo this looks wrong. test
 function square(x) {
     Math.sign(sine(x));
 }

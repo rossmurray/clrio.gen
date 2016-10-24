@@ -4,6 +4,7 @@ import * as utility from "./core/utility.js";
 import settings from "./settings.js";
 import Screen from "./core/screen.js";
 import Scene from "./scene/scene.js";
+import * as timeKeeper from "./core/timeKeeper.js";
 
 var scene;
 var screen;
@@ -17,7 +18,7 @@ function main() {
     canvas.height = height;
 
     screen = new Screen(canvas, context);
-    scene = new Scene();
+    scene = new Scene(screen);
     mainLoop.setUpdate(mainUpdate);
     mainLoop.setDraw(mainDraw);
     mainLoop.setEnd(mainEnd);
@@ -25,14 +26,14 @@ function main() {
 }
 
 function mainUpdate(deltaMs) {
+    timeKeeper.updateTime(deltaMs);
     scene.update();
 }
 
 function mainDraw(interpolationPercentage) {
     screen.resize();
-    screen.clear(settings.bgColor);
-
-    scene.draw(screen);
+    //screen.clear(settings.bgColor);
+    scene.draw();
 }
 
 function mainEnd(fps, panic) {

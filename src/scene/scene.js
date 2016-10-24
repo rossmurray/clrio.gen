@@ -2,16 +2,17 @@ import settings from "../settings.js";
 import Circles from "./circles.js";
 
 const Scene = class Scene {
-    constructor() {
-        this.circles = new Circles(settings.numCircles);
+    constructor(screen) {
+        this.circles = new Circles(settings.numCircles, screen);
+        this.screen = screen;
     }
 
     update() {
         this.circles.update();
     }
 
-    draw(screen) {
-        this.circles.draw(screen);
+    draw() {
+        this.circles.draw();
     }
 }
 
