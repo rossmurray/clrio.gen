@@ -70,6 +70,10 @@
 
 	var _scene2 = _interopRequireDefault(_scene);
 
+	var _timeKeeper = __webpack_require__(12);
+
+	var timeKeeper = _interopRequireWildcard(_timeKeeper);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
@@ -86,7 +90,7 @@
 	    canvas.height = height;
 
 	    screen = new _screen2.default(canvas, context);
-	    scene = new _scene2.default();
+	    scene = new _scene2.default(screen);
 	    mainLoop.setUpdate(mainUpdate);
 	    mainLoop.setDraw(mainDraw);
 	    mainLoop.setEnd(mainEnd);
@@ -94,14 +98,14 @@
 	}
 
 	function mainUpdate(deltaMs) {
+	    timeKeeper.updateTime(deltaMs);
 	    scene.update();
 	}
 
 	function mainDraw(interpolationPercentage) {
 	    screen.resize();
-	    screen.clear(_settings2.default.bgColor);
-
-	    scene.draw(screen);
+	    //screen.clear(settings.bgColor);
+	    scene.draw();
 	}
 
 	function mainEnd(fps, panic) {
@@ -569,7 +573,7 @@
 	});
 	var settings = {
 	    bgColor: "#222222",
-	    numCircles: 100
+	    numCircles: 1500
 	};
 
 	exports.default = settings;
@@ -594,6 +598,8 @@
 
 	        this.canvas = canvas;
 	        this.context = context;
+	        this.width = canvas.width;
+	        this.height = canvas.height;
 	    }
 
 	    _createClass(Screen, [{
@@ -610,6 +616,8 @@
 	            if (this.canvas.width != width || this.canvas.height != height) {
 	                this.canvas.width = width;
 	                this.canvas.height = height;
+	                this.width = width;
+	                this.height = height;
 	            }
 	        }
 	    }, {
@@ -724,10 +732,11 @@
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 	var Scene = function () {
-	    function Scene() {
+	    function Scene(screen) {
 	        _classCallCheck(this, Scene);
 
-	        this.circles = new _circles2.default(_settings2.default.numCircles);
+	        this.circles = new _circles2.default(_settings2.default.numCircles, screen);
+	        this.screen = screen;
 	    }
 
 	    _createClass(Scene, [{
@@ -737,8 +746,8 @@
 	        }
 	    }, {
 	        key: "draw",
-	        value: function draw(screen) {
-	            this.circles.draw(screen);
+	        value: function draw() {
+	            this.circles.draw();
 	        }
 	    }]);
 
@@ -771,6 +780,10 @@
 
 	var husl = _interopRequireWildcard(_husl);
 
+	var _wave = __webpack_require__(11);
+
+	var _wave2 = _interopRequireDefault(_wave);
+
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -778,17 +791,21 @@
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 	var Circles = function () {
-	    function Circles(n) {
+	    function Circles(n, screen) {
 	        _classCallCheck(this, Circles);
 
 	        this.circleData = Array.from(Array(n)).map(function (x) {
 	            return new _circle2.default();
 	        });
+	        this.screen = screen;
 	    }
 
 	    _createClass(Circles, [{
 	        key: "update",
 	        value: function update() {
+	            var hx = (0, _wave2.default)(function (x) {
+	                return _wave2.default.time(1 / 3) + _wave2.default.triangle(x);
+	            }, { frequency: 1.5, min: 0, max: 360 });
 	            var _iteratorNormalCompletion = true;
 	            var _didIteratorError = false;
 	            var _iteratorError = undefined;
@@ -797,14 +814,16 @@
 	                for (var _iterator = this.circleData[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
 	                    var circle = _step.value;
 
-	                    circle.x = utility.randomInt(0, 1000);
-	                    circle.y = utility.randomInt(0, 800);
-	                    var h = utility.randomNumber(0, 360);
-	                    var s = utility.randomNumber(40, 100);
-	                    var l = utility.randomNumber(45, 85);
-	                    var color = husl.toHex(h, s, l);
+	                    circle.x = utility.randomInt(0, this.screen.width);
+	                    circle.y = utility.randomInt(0, this.screen.height);
+	                    var xpercent = circle.x / screen.width;
+	                    var ypercent = circle.y / screen.height;
+	                    var h = hx((xpercent + ypercent) / 2);
+	                    var s = utility.randomNumber(90, 100);
+	                    var l = utility.randomNumber(60, 65);
+	                    var color = husl.toHex(h, s, 55);
 	                    circle.color = color;
-	                    circle.r = 5;
+	                    circle.r = 10;
 	                }
 	            } catch (err) {
 	                _didIteratorError = true;
@@ -823,8 +842,8 @@
 	        }
 	    }, {
 	        key: "draw",
-	        value: function draw(screen) {
-	            screen.drawCircles(this.circleData);
+	        value: function draw() {
+	            this.screen.drawCircles(this.circleData);
 	        }
 	    }]);
 
@@ -855,6 +874,154 @@
 	};
 
 	exports.default = Circle;
+
+/***/ },
+/* 11 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _timeKeeper = __webpack_require__(12);
+
+	var timeKeeper = _interopRequireWildcard(_timeKeeper);
+
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+	var wave = build;
+	wave.linear = linear;
+	wave.sawtooth = sawtooth;
+	wave.sine = sine;
+	wave.triangle = triangle;
+	wave.square = square;
+	wave.round = round;
+	wave.reverse = reverse;
+	wave.time = time;
+	exports.default = wave;
+
+	/**
+	 * config options:
+	 * frequency
+	 * shift
+	 * min
+	 * max
+	 * frequencyMod
+	 * phaseMod
+	 * carrierMin
+	 * carrierMax
+	 * carrierFrequency
+	 */
+
+	function build(carrier, config) {
+	    if (!carrier || typeof carrier !== 'function') {
+	        return function (x) {
+	            return carrier;
+	        };
+	    }
+	    if (!config) {
+	        return carrier;
+	    }
+	    var carrierFrequency = config.carrierFrequency || 1;
+	    var carrierMin = config.carrierMin || 0;
+	    var carrierMax = config.carrierMax || 1;
+	    var targetMin = config.min || 0;
+	    var targetMax = config.max || 1;
+	    var frequency = config.frequency || 1;
+	    var shift = config.shift || 0;
+	    var frequencyMod = config.frequencyMod || function (x) {
+	        return 1;
+	    };
+	    var phaseMod = config.phaseMod || function (x) {
+	        return 0;
+	    };
+	    var targetDelta = targetMax - targetMin;
+	    var carrierDelta = carrierMax - carrierMin;
+
+	    var A = carrierDelta != 0 ? targetDelta / carrierDelta : 0;
+	    var B = carrierFrequency != 0 ? frequency / carrierFrequency : 0;
+	    var C = -shift;
+	    var D = targetMin - (A - carrierMin);
+
+	    var result = function result(x) {
+	        var a = A;
+	        var b = B * frequencyMod(x);
+	        var c = C + phaseMod(x);
+	        var d = D;
+	        var func = carrier;
+	        return a * func(b * (x + c)) + d;
+	    };
+	    return result;
+	}
+
+	function time(x) {
+	    return timeKeeper.getTimeProgress(x);
+	}
+
+	function linear(x) {
+	    return x % 1;
+	}
+
+	//todo improve this. generate using fft?
+	function sawtooth(x) {
+	    return linear(x);
+	}
+
+	function sine(x) {
+	    return Math.sin(x * Math.PI * 2) * 0.5 + 0.5;
+	}
+
+	function triangle(x) {
+	    return Math.abs((0.5 + x) % 1 - 0.5) * 2;
+	}
+
+	//todo this looks wrong. test
+	function square(x) {
+	    Math.sign(sine(x));
+	}
+
+	//todo: make this periodic
+	function round(x) {
+	    var rad = Math.PI / 2;
+	    var down = 3 * rad;
+	    var turn = x * rad;
+	    return 1 + Math.sin(down + turn);
+	}
+
+	//linear from 1 (exclusive) down to 0 (inclusive)
+	function reverse(x) {
+	    return 1 - Number.EPSILON - x;
+	}
+
+/***/ },
+/* 12 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	exports.updateTime = updateTime;
+	exports.getTimeProgress = getTimeProgress;
+	exports.getTotalTimeMs = getTotalTimeMs;
+	var totalTimeMs = 0;
+
+	function updateTime(deltaMs) {
+	    totalTimeMs += deltaMs;
+	}
+
+	//todo: can this be shuffled around to improve the performance?
+	function getTimeProgress(frequencyHz) {
+	    var periodMs = 1000 / frequencyHz;
+	    return totalTimeMs % periodMs / periodMs;
+	}
+
+	function getTotalTimeMs() {
+	    return totalTimeMs;
+	}
 
 /***/ }
 /******/ ]);
