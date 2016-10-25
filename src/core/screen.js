@@ -42,7 +42,7 @@ function drawCircle(context, x, y, r, fillStyle) {
         context.fillStyle = fillStyle;
     }
     context.fill();
-};
+}
 
 function drawLine(context, x, y, length, radians, strokeStyle, lineWidth) {
     var x2 = x + length * Math.cos(radians);
@@ -57,6 +57,6 @@ function drawLine(context, x, y, length, radians, strokeStyle, lineWidth) {
         context.lineWidth = lineWidth;
     }
     context.stroke();
-};
+}
 
 export default Screen;

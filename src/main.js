@@ -1,7 +1,4 @@
 import * as mainLoop from "mainloop.js";
-import * as husl from "husl";
-import * as utility from "./core/utility.js";
-import settings from "./settings.js";
 import Screen from "./core/screen.js";
 import Scene from "./scene/scene.js";
 import * as timeKeeper from "./core/timeKeeper.js";
@@ -10,8 +7,8 @@ var scene;
 var screen;
 
 function main() {
-    const canvas = document.getElementById('canvas');
-    const context = canvas.getContext('2d');
+    const canvas = document.getElementById("canvas");
+    const context = canvas.getContext("2d");
     const width = canvas.clientWidth;
     const height = canvas.clientHeight;
     canvas.width = width;
@@ -39,7 +36,7 @@ function mainDraw(interpolationPercentage) {
 function mainEnd(fps, panic) {
     if(panic) {
         var discardedTime = Math.round(mainLoop.resetFrameDelta());
-        console.warn('Main loop panicked, probably because the browser tab was put in the background. Discarding ' + discardedTime + 'ms');
+        console.warn("Main loop panicked, probably because the browser tab was put in the background. Discarding " + discardedTime + "ms");
     }
 }
 

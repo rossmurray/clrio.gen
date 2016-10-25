@@ -24,7 +24,7 @@ export default wave;
  * carrierFrequency
  */
 function build(carrier, config) {
-    if(!carrier || typeof carrier !== 'function') {
+    if(!carrier || typeof carrier !== "function") {
         return x => carrier;
     }
     if(!config) {
@@ -34,7 +34,7 @@ function build(carrier, config) {
     const carrierMin = config.carrierMin || 0;
     const carrierMax = config.carrierMax || 1;
     const targetMin = config.min || 0;
-    const targetMax = config.max || 1
+    const targetMax = config.max || 1;
     const frequency = config.frequency || 1;
     const shift = config.shift || 0;
     const frequencyMod = config.frequencyMod || (x => 1);
@@ -93,7 +93,7 @@ function round(x) {
     const rad = Math.PI / 2;
     const down = 3 * rad;
     const turn = x * rad;
-    return 1 + Math.sin(down + turn)
+    return 1 + Math.sin(down + turn);
 }
 
 //linear from 1 (exclusive) down to 0 (inclusive)
