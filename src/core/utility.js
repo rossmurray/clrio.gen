@@ -5,3 +5,7 @@ export function randomInt(min, max) {
 export function randomNumber(min, max) {
     return Math.random() * (max - min) + min;
 }
+
+export function distance(a, b) {
+    return Math.hypot(b.x - a.x, b.y - a.y);
+}

@@ -9,6 +9,8 @@ wave.square = square;
 wave.round = round;
 wave.reverse = reverse;
 wave.time = time;
+wave.timePeriod = timePeriod;
+wave.smooth = smoothStep;
 export default wave;
 
 /**
@@ -66,6 +68,11 @@ function time(x) {
     return timeKeeper.getTimeProgress(x);
 }
 
+function timePeriod(x) {
+    const totalTimeMs = timeKeeper.getTotalTimeMs();
+    return (totalTimeMs % x) / x;
+}
+
 function linear(x) {
     return x % 1;
 }
@@ -99,4 +106,8 @@ function round(x) {
 //linear from 1 (exclusive) down to 0 (inclusive)
 function reverse(x) {
     return 1 - Number.EPSILON - x;
+}
+
+function smoothStep(x) {
+    return x * x * (3 - 2 * x);
 }
