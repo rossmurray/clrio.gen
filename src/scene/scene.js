@@ -1,19 +1,19 @@
 import settings from "../settings.js";
-import Circles from "./circles.js";
+import Panels from "./panels.js";
 
 const Scene = class Scene {
     constructor(screen) {
-        this.circles = new Circles(settings.numCircles, screen);
+        this.panels = new Panels(settings.numPanels, screen);
         this.screen = screen;
     }
 
     update() {
-        this.circles.update();
+        this.panels.update();
     }
 
     draw() {
-        this.circles.draw();
+        this.panels.draw();
     }
-}
+};
 
 export default Scene;

@@ -2,6 +2,7 @@ import * as mainLoop from "mainloop.js";
 import Screen from "./core/screen.js";
 import Scene from "./scene/scene.js";
 import * as timeKeeper from "./core/timeKeeper.js";
+import settings from "./settings.js";
 
 var scene;
 var screen;
@@ -30,6 +31,7 @@ function mainUpdate(deltaMs) {
 function mainDraw(interpolationPercentage) {
     screen.resize();
     //screen.clear(settings.bgColor);
+    screen.clear();
     scene.draw();
 }
 
