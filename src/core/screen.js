@@ -7,6 +7,11 @@ const Screen = class Screen {
     }
 
     clear(color) {
+        this.context.shadowBlur = 0;
+        if(!color) {
+            this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+            return;
+        }
         this.context.fillStyle = color;
         this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
     }
@@ -31,6 +36,17 @@ const Screen = class Screen {
     drawLines(lines) {
         for(const line of lines) {
             drawLine(this.context, line.x, line.y, line.radians, line.length);
+        }
+    }
+
+    drawRectangles(rectangles, shadowSize) {
+        if(shadowSize) {
+            this.context.shadowColor = "#000";
+            this.context.shadowBlur = 10;
+        }
+        for(const rect of rectangles) {
+            this.context.fillStyle = rect.color;
+            this.context.fillRect(rect.x, rect.y, rect.width, rect.height);
         }
     }
 };
