@@ -1,9 +1,18 @@
 const Screen = class Screen {
-    constructor(canvas, context) {
+    constructor(context) {
+        const canvas = context.canvas;
         this.canvas = canvas;
         this.context = context;
         this.width = canvas.width;
         this.height = canvas.height;
+    }
+
+    static virtualContext(width, height) {
+        const canvas = document.createElement("canvas");
+        canvas.width = width;
+        canvas.height = height;
+        const context = canvas.getContext("2d");
+        return context;
     }
 
     clear(color) {
@@ -42,12 +51,18 @@ const Screen = class Screen {
     drawRectangles(rectangles, shadowSize) {
         if(shadowSize) {
             this.context.shadowColor = "#000";
-            this.context.shadowBlur = 10;
+            this.context.shadowBlur = shadowSize;
         }
         for(const rect of rectangles) {
             this.context.fillStyle = rect.color;
             this.context.fillRect(rect.x, rect.y, rect.width, rect.height);
         }
+    }
+
+    drawImageStretch(imageElement) {
+        const width = this.canvas.width;
+        const height = this.canvas.height;
+        this.context.drawImage(imageElement, 0, 0, width, height);
     }
 };
 
