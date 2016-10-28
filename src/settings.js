@@ -9,7 +9,7 @@ const settings = {
     panelMaxHeightRatio: 2.6,
     panelMinTTL: 4700,
     panelMaxTTL: 8133,
-    panelShadowSize: 10
+    panelShadowSize: 10,
 };
 
 export default settings;

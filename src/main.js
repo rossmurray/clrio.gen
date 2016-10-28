@@ -3,6 +3,9 @@ import Screen from "./core/screen.js";
 import Scene from "./scene/scene.js";
 import * as timeKeeper from "./core/timeKeeper.js";
 import settings from "./settings.js";
+import ScratchpadScene from "./scene/scratchpadScene.js";
+
+import SimplexNoise from "./core/simplexNoise.js";
 
 var scene;
 var screen;
@@ -15,8 +18,9 @@ function main() {
     canvas.width = width;
     canvas.height = height;
 
-    screen = new Screen(canvas, context);
-    scene = new Scene(screen);
+    screen = new Screen(context);
+    //scene = new Scene(screen);
+    scene = new ScratchpadScene(screen);
     mainLoop.setUpdate(mainUpdate);
     mainLoop.setDraw(mainDraw);
     mainLoop.setEnd(mainEnd);
@@ -30,7 +34,6 @@ function mainUpdate(deltaMs) {
 
 function mainDraw(interpolationPercentage) {
     screen.resize();
-    //screen.clear(settings.bgColor);
     screen.clear();
     scene.draw();
 }
