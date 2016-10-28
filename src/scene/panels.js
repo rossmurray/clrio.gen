@@ -12,7 +12,6 @@ const Panels = class Panels {
         const initialPanels = randomPanels(n, this.boundary);
         this.panelData = initialPanels.data;
         this.panelMotion = initialPanels.motion;
-        //this.panelData = Array.from(Array(n)).map(() => new Panel());
         this.screen = screen;
     }
 
