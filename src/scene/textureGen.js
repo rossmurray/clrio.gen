@@ -6,10 +6,10 @@ export function draw(screen) {
     const width = screen.width;
     const height = screen.height;
     const hueGen = new SimplexNoise({
-        octaves: 3,
+        octaves: 1,
         min: 0,
         max: 1,
-        frequency: 1/153
+        frequency: 1/151
     });
     // const satGen = new FastSimplexNoise({
     //     octaves: 3,
@@ -29,11 +29,25 @@ export function draw(screen) {
         const x = (i / 4) % width;
         const y = Math.floor((i / 4) / width);
         const tone = hueGen.in2D(x, y);
-        if(tone >= 0.6) {
-            const value = (tone - 0.6) * (1 / 0.6);
-            const h = utility.randomNumber(0, 1) * 180 - 90;
+        if(tone < 0.35) {
+            const value = tone * (1 / 0.35);
+            const h = value * (265 - 257) + 257;
+            const s = 95;
+            const l = value * (65 - 23) + 23;
+            const rgb = husl.toRGB(h, s, l);
+            const r = rgb[0];
+            const g = rgb[1];
+            const b = rgb[2];
+            data[i] = Math.floor(r * 255);
+            data[i + 1] = Math.floor(g * 255);
+            data[i + 2] = Math.floor(b * 255);
+            data[i + 3] = 255;
+        }
+        else if(tone < 0.7){
+            const value = (tone - 0.35) * (1 / (0.7 - 0.35));
+            const h = value * (13-11) + 11;
             const s = 100;
-            const l = value * (80 - 50) + 50;
+            const l = value * (70 - 29) + 29;
             const rgb = husl.toRGB(h, s, l);
             const r = rgb[0];
             const g = rgb[1];
@@ -44,10 +58,11 @@ export function draw(screen) {
             data[i + 3] = 255;
         }
         else {
-            const value = tone * (1 / 0.6);
-            const h = value * (310-292) + 292;
-            const s = 100;
-            const l = value * (50 - 45) + 45;
+            const value = (tone - 0.7) * (1 / (1 - 0.7));
+            //const h = value * (280-0) + 0;
+            const h = 200;
+            const s = 0;
+            const l = value * (100 - 85) + 85;
             const rgb = husl.toRGB(h, s, l);
             const r = rgb[0];
             const g = rgb[1];
