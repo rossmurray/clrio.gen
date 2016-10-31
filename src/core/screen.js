@@ -15,6 +15,13 @@ const Screen = class Screen {
         return context;
     }
 
+    makeImageData(width, height) {
+        const w = width || this.width;
+        const h = height || this.height;
+        const imageData = this.context.createImageData(w, h);
+        return imageData;
+    }
+
     clear(color) {
         this.context.shadowBlur = 0;
         if(!color) {
