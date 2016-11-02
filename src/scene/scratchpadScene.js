@@ -8,7 +8,7 @@ const ScratchpadScene = class ScratchpadScene {
         const canvas = screen.canvas;
         const width = canvas.width;
         const height = canvas.height;
-        const context = Screen.virtualContext(width, height);
+        const context = Screen.virtualContext(300, 300 * (height / width));
         this.buffer = context.canvas;
         const virtualScreen = new Screen(context);
         textureGen.draw(virtualScreen);

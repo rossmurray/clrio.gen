@@ -6,22 +6,23 @@ export function draw(screen) {
     const width = screen.width;
     const height = screen.height;
     const noiseGen = new SimplexNoise({
-        octaves: 1,
+        octaves: 8,
         min: 0,
         max: 1,
-        frequency: 1/151
+        frequency: 1/19
     });
     const distance = distanceFromCenter(width, height);
     const imageData = noiseGen.getFilledImageData(screen, (x, y, value) => {
-        const h = 180 + ((value * 210) + ((x / width) * 210)) / 2
+        const d = distance(x,y);
+        const h = 3 + ((value * 100) + (d * 100)) / 2;
         const s = 100;
         const l = 
             (
-                (value * (85 - 45) + 45)
-                + ((1 - distance(x,y)) * (90 - 30) + 30)
+                (value * (70 - 35) + 35)
+                + ((1 - d) * (70 - 45) + 45)
             ) / 2;
         const rgb = husl.toRGB(h, s, l);
-        const bytes = rgb.map(x => Math.floor(x * 255));
+        const bytes = rgb;
         return bytes;
     });
     screen.context.putImageData(imageData, 0, 0);

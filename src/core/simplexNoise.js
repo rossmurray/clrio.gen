@@ -31,9 +31,9 @@ const SimplexNoise = class SimplexNoise {
             const y = Math.floor((i / 4) / width);
             const tone = this.generator.in2D(x, y);
             const userPixel = pixelFunc(x, y, tone);
-            data[i] = userPixel[0];
-            data[i + 1] = userPixel[1];
-            data[i + 2] = userPixel[2];
+            data[i] = Math.floor(userPixel[0] * 255);
+            data[i + 1] = Math.floor(userPixel[1] * 255);
+            data[i + 2] = Math.floor(userPixel[2] * 255);
             data[i + 3] = 255; //alpha
         }
         return imageData;
