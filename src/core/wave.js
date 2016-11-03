@@ -51,7 +51,7 @@ function build(carrier, config) {
         ? frequency / carrierFrequency
         : 0;
     const C = -shift;
-    const D = targetMin - (A - carrierMin);
+    const D = targetMin - carrierMin;
 
     const result = x => {
         const a = A;
@@ -97,9 +97,10 @@ function square(x) {
 
 //todo: make this periodic
 function round(x) {
+    const y = x % 1;
     const rad = Math.PI / 2;
     const down = 3 * rad;
-    const turn = x * rad;
+    const turn = y * rad;
     return 1 + Math.sin(down + turn);
 }
 
@@ -109,5 +110,6 @@ function reverse(x) {
 }
 
 function smoothStep(x) {
-    return x * x * (3 - 2 * x);
+    const y = x % 1;
+    return y * y * (3 - 2 * y);
 }
