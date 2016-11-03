@@ -4,7 +4,6 @@ import Scene from "./scene/scene.js";
 import * as timeKeeper from "./core/timeKeeper.js";
 import settings from "./settings.js";
 import ScratchpadScene from "./scene/scratchpadScene.js";
-
 import SimplexNoise from "./core/simplexNoise.js";
 
 var scene;
