@@ -17,7 +17,9 @@ const GridLayout = class GridLayout {
     //changes parameter in-place to a new position, and returns it
     changePosition(oldPosition) {
         const next = this.empty.shift();
-        swapPositions(next, oldPosition);
+        //swap
+        [a.x, b.x] = [b.x, a.x];
+        [a.y, b.y] = [b.y, a.y];
         this.empty.push(next);
         return oldPosition;
     }
@@ -40,11 +42,6 @@ function createPositions(approxNumber, width, height) {
         }
     }
     return result;
-}
-
-function swapPositions(a, b) {
-    a.x, b.x = b.x, a.x;
-    a.y, b.y = b.y, a.y;
 }
 
 export default GridLayout;
