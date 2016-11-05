@@ -1,5 +1,4 @@
 import wave from "../core/wave.js";
-import shuffle from "lodash/shuffle";
 
 const GridLayout = class GridLayout {
     constructor(approxPositionCount, width, height) {
