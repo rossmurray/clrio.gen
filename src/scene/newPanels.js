@@ -12,9 +12,10 @@ const NewPanels = class NewPanels {
         const panelCount = settings.panels.count;
         const width = screen.width;
         const height = screen.height;
-        const screenRatio = width / height;
         const margin = calculateMargin(width, height);
-        const grid = makeGrid(panelCount, screenRatio);
+        const fieldWidth = margin.x2 - margin.x1;
+        const fieldHeight = margin.y2 - margin.y1;
+        const grid = makeGrid(panelCount, fieldWidth, fieldHeight);
         const panels = makePanels(panelCount, grid);
         this.screen = screen;
         this.margin = margin;
@@ -44,13 +45,10 @@ function calculateMargin(width, height) {
     };
 }
 
-function makeGrid(panelCount, screenRatio) {
+function makeGrid(panelCount, width, height) {
     const emptyGridPercent = settings.panels.emptyGridPercent;
     const approxCount = panelCount * (1 / (1 - emptyGridPercent));
-    const half = Math.sqrt(approxCount);
-    let width = 1 + Math.floor(screenRatio * half);
-    let height = Math.floor((1 / screenRatio) * half);
-    const result = new GridLayout(width, height);
+    const result = new GridLayout(approxCount, width, height);
     return result;
 }
 
