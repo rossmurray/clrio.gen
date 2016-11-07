@@ -1,22 +1,27 @@
 import wave from "../core/wave.js";
+import shuffle from "lodash/shuffle"; 
 
 const GridLayout = class GridLayout {
     constructor(approxPositionCount, width, height) {
         const positions = createPositions(approxPositionCount, width, height);
-        this.positions = positions;
         const empties = shuffle(positions);
         this.empty = empties;
     }
 
-    takeNewPosition() {
-        const next = this.empty.shift();
-        return next;
+    getNewPositions(n) {
+        const take = this.empty.slice(0, n);
+        const rest = this.empty.slice(n);
+        this.empty = rest;
+        return take;
     }
 
     //changes parameter in-place to a new position, and returns it
+    //could change this to a counter that says which empty is next, instead of modifying the array every time.
     changePosition(oldPosition) {
         const next = this.empty.shift();
         //swap
+        const a = oldPosition;
+        const b = next;
         [a.x, b.x] = [b.x, a.x];
         [a.y, b.y] = [b.y, a.y];
         this.empty.push(next);
