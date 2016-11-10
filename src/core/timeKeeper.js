@@ -1,6 +1,8 @@
 let totalTimeMs = 0;
+let lastDeltaMs = 0;
 
 export function updateTime(deltaMs) {
+    lastDeltaMs = deltaMs;
     totalTimeMs += deltaMs;
 }
 
@@ -12,4 +14,8 @@ export function getTimeProgress(frequencyHz) {
 
 export function getTotalTimeMs() {
     return totalTimeMs;
+}
+
+export function getLastDeltaMs() {
+    return lastDeltaMs;
 }
