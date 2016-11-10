@@ -15,8 +15,11 @@ const NewPanels = class NewPanels {
         const margin = calculateMargin(width, height);
         const fieldWidth = margin.x2 - margin.x1;
         const fieldHeight = margin.y2 - margin.y1;
+        //grid positions are relative to margin
         const grid = makeGrid(panelCount, fieldWidth, fieldHeight);
-        const panels = makePanels(panelCount, grid);
+        const fieldArea = fieldWidth * fieldHeight;
+        const panels = makePanels(panelCount, grid, fieldArea);
+        
         this.screen = screen;
         this.margin = margin;
         this.grid = grid;
@@ -52,34 +55,29 @@ function makeGrid(panelCount, width, height) {
     return result;
 }
 
-function makePanels(count, grid) {
+function makePanels(count, grid, fieldArea) {
+    const positions = grid.getNewPositions(count);
     const uniformPortion = Math.floor(count / 3);
-    const randomPortion = count - uniformPortion;
-    const result = [];
     const slice = 1 / uniformPortion;
     const offset = slice / 2;
-    for(let i = 0; i < uniformPortion; i++) {
-        const value = offset + slice * i;
-        const panel = makeRandomPanel(value);
-        result.push(panel);
-    }
-    for(let i = 0; i < randomPortion; i++) {
+    const midPanelSize = calculateMidPanelSize(count, fieldArea);
+    const result = Array.from({length: count}, (v, k) => {
+        const position = positions[k];
+        if(k < uniformPortion) {
+            const value = offset + slice * k;
+            return new Panel(value, position, midPanelSize);
+        }
         const value = utility.randomNumber(0.01, 0.99);
-        const panel = makeRandomPanel(value);
-        result.push(panel);
-    }
-    result.sort((a,b) => b.seedValue - a.seedValue);
+        return new Panel(value, position, midPanelSize);
+    });
+    result.sort((a,b) => b.seed - a.seed);
+    calculatePanelTextures(result); //todo: move this to inside map also
     return result;
 }
 
-function chooseRandomEmptyGridSpot(grid) {
-
-}
-
-function makeRandomPanel(seedValue, gridSpot) {
-    const panel = new Panel();
-    panel.seedValue = seedValue;
-    return panel;
+function calculateMidPanelSize(panelCount, fieldArea) {
+    const midSize = Math.sqrt(fieldArea * settings.panels.visualDensityPercent / panelCount);
+    return midSize;
 }
 
 function calculatePanelTextures(panels) {
