@@ -1,9 +1,9 @@
 import settings from "../settings.js";
-import Panels from "./panels.js";
+import NewPanels from "./newPanels.js";
 
 const Scene = class Scene {
     constructor(screen) {
-        this.panels = new Panels(settings.numPanels, screen);
+        this.panels = new NewPanels(screen);
         this.screen = screen;
     }
 

@@ -1,9 +1,10 @@
-import timeKeeper from "./timeKeeper.js";
+import * as timeKeeper from "./timeKeeper.js";
 import wave from "./wave.js";
 
 const MotionComponent = class MotionComponent {
     constructor(config) {
         if(!config) { config = {}; }
+        //todo: error if position doesn't exist
         const xpos = config.position.x || 0;
         const ypos = config.position.y || 0;
         const mass = config.mass || 100;
@@ -24,8 +25,8 @@ const MotionComponent = class MotionComponent {
         this.move = nullMovement;
     }
 
-    update(deltaMs) {
-        this.move(deltaMs);
+    update() {
+        this.move();
     }
 
     /**
@@ -49,8 +50,7 @@ const MotionComponent = class MotionComponent {
         const xtarget = destination.x;
         const ytarget = destination.y;
         const beginTime = timeKeeper.getTotalTimeMs();
-        const endTime = beginTime + tripLengthMs;
-        const moveFunc = deltaMs => {
+        const moveFunc = () => {
             const now = timeKeeper.getTotalTimeMs();
             const percentDone = (now - beginTime) / tripLengthMs;
             if(percentDone >= 1.0) {

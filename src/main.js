@@ -18,8 +18,8 @@ function main() {
     canvas.height = height;
 
     screen = new Screen(context);
-    //scene = new Scene(screen);
-    scene = new ScratchpadScene(screen);
+    scene = new Scene(screen);
+    //scene = new ScratchpadScene(screen);
     mainLoop.setUpdate(mainUpdate);
     mainLoop.setDraw(mainDraw);
     mainLoop.setEnd(mainEnd);

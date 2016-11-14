@@ -2,8 +2,8 @@ import wave from "../core/wave.js";
 import shuffle from "lodash/shuffle"; 
 
 const GridLayout = class GridLayout {
-    constructor(approxPositionCount, width, height) {
-        const positions = createPositions(approxPositionCount, width, height);
+    constructor(slotCount, width, height) {
+        const positions = createPositions(slotCount, width, height);
         const empties = shuffle(positions);
         this.empty = empties;
     }
@@ -29,18 +29,19 @@ const GridLayout = class GridLayout {
     }
 };
 
-function createPositions(approxNumber, width, height) {
-    const half = Math.sqrt(approxNumber);    
+function createPositions(slotCount, width, height) {
+    const half = Math.sqrt(slotCount);    
     const screenRatio = width / height;
-    const columns = 1 + Math.floor(screenRatio * half);
-    const rows = Math.floor((1 / screenRatio) * half);
+    const columns = Math.ceil(half * screenRatio);
+    //const rows = Math.floor((1 / screenRatio) * half);
+    const rows = slotCount / columns;
     const result = [];
     const rise = height / rows;
     const run = width / columns;
     for(let i = 0; i < columns; i++) {
         for(let j = 0; j < rows; j++) {
             const x = run * (i + 1);
-            const y = rise * (i + 1);
+            const y = rise * (j + 1);
             const newPosition = {x, y};
             result.push(newPosition);
         }
