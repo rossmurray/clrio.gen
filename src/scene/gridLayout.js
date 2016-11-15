@@ -32,7 +32,7 @@ const GridLayout = class GridLayout {
 function createPositions(slotCount, width, height) {
     const half = Math.sqrt(slotCount);    
     const screenRatio = width / height;
-    const columns = Math.ceil(half * screenRatio);
+    const columns = Math.floor(half * screenRatio);
     //const rows = Math.floor((1 / screenRatio) * half);
     const rows = slotCount / columns;
     const result = [];
@@ -40,8 +40,8 @@ function createPositions(slotCount, width, height) {
     const run = width / columns;
     for(let i = 0; i < columns; i++) {
         for(let j = 0; j < rows; j++) {
-            const x = run * (i + 1);
-            const y = rise * (j + 1);
+            const x = run * (i + 0.5);
+            const y = rise * (j + 0.5);
             const newPosition = {x, y};
             result.push(newPosition);
         }
