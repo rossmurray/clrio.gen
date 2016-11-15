@@ -36,14 +36,14 @@ const Panel = class Panel {
         this.changeAtTotalMs = departAtMs;
         this.motion = motion;
         // this.texture = undefined;
-        
+
         //const colorLightness = Math.floor(utility.scale(seedValue, 50, 230));
         //this.color = "rgb(" + colorLightness + "," + colorLightness + "," + colorLightness + ")";
-        this.color = seedValue < 0.2
+        this.color = seedValue < 0.1
             ? settings.panels.color1
-            : seedValue < 0.5
+            : seedValue < 0.4
             ? settings.panels.color2
-            : seedValue < 0.8
+            : seedValue < 0.9
             ? settings.panels.color3
             : settings.panels.color4;
     }

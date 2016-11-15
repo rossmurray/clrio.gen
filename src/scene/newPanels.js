@@ -20,11 +20,18 @@ const NewPanels = class NewPanels {
         const fieldArea = fieldWidth * fieldHeight;
         const fieldDiameter = (fieldWidth + fieldHeight) / 2;
         const panels = makePanels(panelCount, grid, fieldArea, fieldDiameter);
+        const noiseGen = new SimplexNoise({
+            octaves: 1,
+            min: 0,
+            max: 1,
+            frequency: 1/29
+        });
         
         this.screen = screen;
         this.margin = margin;
         this.grid = grid;
         this.panels = panels;
+        this.noise = noiseGen;
     }
 
     update() {
@@ -32,14 +39,28 @@ const NewPanels = class NewPanels {
         const now = timeKeeper.getTotalTimeMs();
         for(let i = 0; i < this.panels.length; i++) {
             const panel = this.panels[i];
-            if(!panel.moving && panel.changeAtTotalMs <= now) {
-                const nodeSpot = panel.layoutNode;
-                this.grid.changePosition(nodeSpot);
-                const distanceToTarget = utility.distance(nodeSpot, {x: panel.x, y: panel.y});
-                const tripLengthMs = distanceToTarget / panel.motion.maxVelocity;
-                const idleAfter = utility.randomNumber(panel.minIdle, panel.maxIdle);
-                panel.changeAtTotalMs = now + tripLengthMs + idleAfter;
-                panel.motion.fixedAnimateToward(nodeSpot, tripLengthMs, wave.smooth);
+            if(!panel.motion.moving) {
+                if(panel.changeAtTotalMs <= now) {
+                    const nodeSpot = panel.layoutNode;
+                    this.grid.changePosition(nodeSpot);
+                    const distanceToTarget = utility.distance(nodeSpot, {x: panel.x, y: panel.y});
+                    const tripLengthMs = distanceToTarget / panel.motion.maxVelocity;
+                    const idleAfter = utility.randomNumber(panel.minIdle, panel.maxIdle);
+                    panel.changeAtTotalMs = now + tripLengthMs + idleAfter;
+                    panel.motion.fixedAnimateToward(nodeSpot, tripLengthMs, wave.smooth);
+                }
+                else {
+                    const xscale = panel.width / 12;
+                    const yscale = panel.height / 20;
+                    // const xShift = utility.randomNumber(-xscale, xscale);
+                    // const yShift = utility.randomNumber(-yscale, yscale);
+                    const xShift = utility.randomNumber(-7, 7);
+                    const yShift = utility.randomNumber(-3, 3);
+                    const destination = {x: panel.layoutNode.x + xShift, y: panel.layoutNode.y + yShift};
+                    const timeScale = utility.scale(panel.seed, 5000, 1000);
+                    const tripLengthMs = utility.randomNumber(timeScale - timeScale / 4, timeScale + timeScale / 4);
+                    panel.motion.fixedAnimateToward(destination, tripLengthMs, wave.smooth);
+                }
             }
             panel.motion.update();
             panel.x = panel.motion.xpos + this.margin.x1 - panel.width / 2;
@@ -48,7 +69,7 @@ const NewPanels = class NewPanels {
     }
 
     draw() {
-        this.screen.drawRectangles(this.panels);
+        this.screen.drawRectangles(this.panels, 8);
         //this.screen.drawCircles(this.grid.empty.map(x => { return {x: x.x, y: x.y, r: 20, color: "#0ff"}; }));
     }
 };
