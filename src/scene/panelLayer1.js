@@ -61,19 +61,6 @@ const PanelLayer1 = class PanelLayer1 {
     }
 };
 
-function calculateMargin(width, height) {
-    const marginX = width * settings.panels.marginPercent;
-    const marginY = height * settings.panels.marginPercent;
-    const maxX = width - marginX;
-    const maxY = height - marginY;
-    return {
-        x1: marginX,
-        y1: marginY,
-        x2: maxX,
-        y2: maxY
-    };
-}
-
 function makeGrid(panelCount, bounds) {
     const emptyGridPercent = settings.panels.emptyGridPercent;
     const totalSlots = Math.ceil(panelCount * (1 + emptyGridPercent));
