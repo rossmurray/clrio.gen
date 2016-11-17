@@ -18,6 +18,7 @@ const MotionComponent = class MotionComponent {
         this.targetX = xpos;
         this.targetY = ypos;
         this.moving = false;
+        this.idleSince = 0;
 
         this.mass = mass;
         this.maxVelocity = maxVelocity;
@@ -58,6 +59,7 @@ const MotionComponent = class MotionComponent {
                 this.ypos = ytarget;
                 this.move = nullMovement;
                 this.moving = false;
+                this.idleSince = now;
             }
             else {
                 const value = moveMap(percentDone);
@@ -69,6 +71,7 @@ const MotionComponent = class MotionComponent {
         };
         this.move = moveFunc;
         this.moving = true;
+        this.idleSince = 0;
     }
 
     /**

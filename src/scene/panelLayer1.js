@@ -1,41 +1,28 @@
 import * as utility from "../core/utility.js";
-import * as husl from "husl";
 import wave from "../core/wave.js";
 import * as timeKeeper from "../core/timeKeeper.js";
-import SimplexNoise from "../core/simplexNoise.js";
 import settings from "../settings.js";
 import Panel from "./panel.js";
 import GridLayout from "./gridLayout.js";
 
-const NewPanels = class NewPanels {
-    constructor(screen) {
+const PanelLayer1 = class PanelLayer1 {
+    constructor(bounds) {
         const panelCount = settings.panels.count;
-        const width = screen.width;
-        const height = screen.height;
-        const margin = calculateMargin(width, height);
-        const fieldWidth = margin.x2 - margin.x1;
-        const fieldHeight = margin.y2 - margin.y1;
-        //grid positions are relative to margin
-        const grid = makeGrid(panelCount, fieldWidth, fieldHeight);
-        const fieldArea = fieldWidth * fieldHeight;
-        const fieldDiameter = (fieldWidth + fieldHeight) / 2;
-        const panels = makePanels(panelCount, grid, fieldArea, fieldDiameter);
-        const noiseGen = new SimplexNoise({
-            octaves: 1,
-            min: 0,
-            max: 1,
-            frequency: 1/29
-        });
+        const width = bounds.width;
+        const height = bounds.height;
+        //grid positions are relative to bounds x and y
+        const grid = makeGrid(panelCount, bounds);
+        const area = width * height;
+        const fauxDiameter = (width + height) / 2;
+        const panels = makePanels(panelCount, grid, area, fauxDiameter);
         
-        this.screen = screen;
-        this.margin = margin;
+        this.bounds = bounds;
         this.grid = grid;
         this.panels = panels;
-        this.noise = noiseGen;
     }
 
     update() {
-        const screenSize = (this.screen.width + this.screen.height) / 2;
+        const screenSize = (this.bounds.width + this.bounds.height) / 2;
         const now = timeKeeper.getTotalTimeMs();
         const swayPauseMs = utility.randomInt(500, 5000);
         for(let i = 0; i < this.panels.length; i++) {
@@ -64,14 +51,13 @@ const NewPanels = class NewPanels {
                 }
             }
             panel.motion.update();
-            panel.x = Math.round(panel.motion.xpos + this.margin.x1 - panel.width / 2);
-            panel.y = Math.round(panel.motion.ypos + this.margin.y1 - panel.height / 2);
+            panel.x = Math.round(panel.motion.xpos + this.bounds.x - panel.width / 2);
+            panel.y = Math.round(panel.motion.ypos + this.bounds.y - panel.height / 2);
         }
     }
 
-    draw() {
-        this.screen.drawRectangles(this.panels, 22);
-        //this.screen.drawCircles(this.grid.empty.map(x => { return {x: x.x, y: x.y, r: 20, color: "#0ff"}; }));
+    getPanelsForDraw() {
+        return this.panels;
     }
 };
 
@@ -88,10 +74,10 @@ function calculateMargin(width, height) {
     };
 }
 
-function makeGrid(panelCount, width, height) {
+function makeGrid(panelCount, bounds) {
     const emptyGridPercent = settings.panels.emptyGridPercent;
     const totalSlots = Math.ceil(panelCount * (1 + emptyGridPercent));
-    const result = new GridLayout(totalSlots, width, height);
+    const result = new GridLayout(totalSlots, bounds.width, bounds.height);
     return result;
 }
 
@@ -125,4 +111,4 @@ function calculatePanelTextures(panels) {
 
 }
 
-export default NewPanels;
+export default PanelLayer1;

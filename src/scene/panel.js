@@ -23,12 +23,13 @@ const Panel = class Panel {
         const maxIdle = utility.scale(1 - seedValue, settings.panels.maxIdle.min, settings.panels.maxIdle.max);
         const departAtMs = now + utility.randomInt(0, maxIdle);
         const motion = new MotionComponent({position, maxVelocity});
+        motion.idleSince = now - utility.randomInt(500, 5000);
         //todo: also needs mass, and acceleration
 
-        this.x = position.x;
-        this.y = position.y;
-        this.width = width;
-        this.height = height;
+        this.x = Math.round(position.x);
+        this.y = Math.round(position.y);
+        this.width = Math.round(width);
+        this.height = Math.round(height);
         this.layoutNode = position;
         this.seed = seedValue;
         this.minIdle = minIdle;
@@ -39,11 +40,11 @@ const Panel = class Panel {
 
         //const colorLightness = Math.floor(utility.scale(seedValue, 50, 230));
         //this.color = "rgb(" + colorLightness + "," + colorLightness + "," + colorLightness + ")";
-        this.color = seedValue < 0.1
+        this.color = seedValue < 0.15
             ? settings.panels.color1
             : seedValue < 0.4
             ? settings.panels.color2
-            : seedValue < 0.9
+            : seedValue < 0.94
             ? settings.panels.color3
             : settings.panels.color4;
     }
