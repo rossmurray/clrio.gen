@@ -6,7 +6,7 @@ import * as utility from "../core/utility.js";
 
 const Scene = class Scene {
     constructor(screen) {
-        timeKeeper.updateTime(8500);
+        timeKeeper.updateTime(0);
         const boundary = makeBoundary(screen);
         const n = settings.numSliders;
         const sliders = makeSliders(n, boundary);
@@ -23,36 +23,33 @@ const Scene = class Scene {
 
     draw() {
         drawSliders(this.screen, this.sliders);
+        //this.screen.drawText(Math.ceil(timeKeeper.getTotalTimeMs()), 50, 50);
     }
 };
 
 function updateSliders(sliders, boundary) {
     //const maxX = boundary.width + boundary.x - boundary.width * settings.sliderWidth;
-    const hueF = wave(x => wave.linear(x), {min: 0, max: 360});
-    const widthF = wave(x => (wave.triangle(x)), {min: settings.sliderWidthMin, max: settings.sliderWidthMax});
+    //const hueF = wave(x => wave.linear(x), {min: 0, max: 360, frequency: 1});
+    const hueMod = wave(x => wave.sine(wave.time(1/3)));
+    //const hueF = wave(x => (wave.smooth(wave.time(1/2) + x) % 1), {min: 0, max: 360, frequencyMod: hueMod, frequency: 2});
+    const hueF = wave(x => (wave.reverse(x - wave.time(1/2))), {min: 0, max: 360, frequency: 1});
+    const widthF = wave(x => (wave.sine(x)), {min: settings.sliderWidthMin, max: settings.sliderWidthMax});
     const widthAt1 = boundary.width * widthF(1 - Number.EPSILON);
     const widthAt0 = boundary.width * widthF(0);
     const maxX = boundary.width + boundary.x - (boundary.width * widthAt1);
     //const xPosF = wave(x => wave.linear(x), {min: boundary.x, max: maxX});
     const xMargin = boundary.x * 2;
-    const xPosF = wave(x => wave.smooth(x), {min: 0 - widthAt0, max: boundary.width + xMargin});
+    const xPosF = wave(x => wave.sine(x), {min: 0 - widthAt0, max: boundary.width + xMargin});
     for(var i = 0; i < sliders.length; i++) {
         const slider = sliders[i];
         const motionValue = slider.motion();
-        const hue = hueF(motionValue);
+        const hue = hueF(utility.scaleFrom(slider.y, boundary.y, boundary.y + boundary.height, 0, 1));
         const widthPercent = widthF(motionValue);
         slider.color = husl.toHex(hue, 100, 60);
         slider.width = boundary.width * widthPercent;
         const x = xPosF(motionValue);
-        // if(x < 0) {
-        //     slider.x = 0;
-        //     slider.width = slider.width + x;
-        // }
-        // else {
-        //     slider.x = x;
-        // }
         slider.x = x;
-        //slider.x = boundary.width / 2 - slider.width / 2;
+        //slider.x = boundary.x + boundary.width / 2 - slider.width / 2;
     }
 }
 
@@ -61,7 +58,7 @@ function makeSliders(count, boundary) {
     const heightMin = boundary.height * settings.sliderHeightMin / count;
     const heightMax = boundary.height * settings.sliderHeightMax / count;
     const frequencyFunction = x => utility.scale(x, 1000 / settings.slowestSliderPeriodMs, 1000 / settings.fastestSliderPeriodMs);
-    const heightFunction = wave(x => wave.smooth((x / count)), {min: heightMin, max: heightMax});
+    const heightFunction = wave(x => wave.reverse(wave.smooth(x / count)), {min: heightMin, max: heightMax});
     for(var i = 0; i < count; i++) {
         const frequency = frequencyFunction(i / count);
         const motion = wave(x => wave.time(frequency));
