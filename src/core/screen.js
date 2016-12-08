@@ -55,13 +55,7 @@ const Screen = class Screen {
         }
     }
 
-    drawRectangles(rectangles, shadowSize) {
-        if(shadowSize) {
-            this.context.shadowColor = "#322";
-            this.context.shadowBlur = shadowSize;
-            this.context.shadowOffsetX = 13;
-            this.context.shadowOffsetY = 14;
-        }
+    drawRectangles(rectangles) {
         for(const rect of rectangles) {
             this.context.fillStyle = rect.color;
             this.context.fillRect(rect.x, rect.y, rect.width, rect.height);
