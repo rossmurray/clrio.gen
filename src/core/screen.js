@@ -5,6 +5,7 @@ const Screen = class Screen {
         this.context = context;
         this.width = canvas.width;
         this.height = canvas.height;
+        context.font = "2em sans-serif";
     }
 
     static virtualContext(width, height) {
@@ -55,13 +56,7 @@ const Screen = class Screen {
         }
     }
 
-    drawRectangles(rectangles, shadowSize) {
-        if(shadowSize) {
-            this.context.shadowColor = "#322";
-            this.context.shadowBlur = shadowSize;
-            this.context.shadowOffsetX = 13;
-            this.context.shadowOffsetY = 14;
-        }
+    drawRectangles(rectangles) {
         for(const rect of rectangles) {
             this.context.fillStyle = rect.color;
             this.context.fillRect(rect.x, rect.y, rect.width, rect.height);
@@ -72,6 +67,11 @@ const Screen = class Screen {
         const width = this.canvas.width;
         const height = this.canvas.height;
         this.context.drawImage(imageElement, 0, 0, width, height);
+    }
+
+    drawText(text, x, y) {
+        this.context.fillStyle = "#fff"; 
+        this.context.fillText(text, x, y);
     }
 };
 
