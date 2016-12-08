@@ -5,6 +5,7 @@ const Screen = class Screen {
         this.context = context;
         this.width = canvas.width;
         this.height = canvas.height;
+        context.font = "2em sans-serif";
     }
 
     static virtualContext(width, height) {
@@ -66,6 +67,11 @@ const Screen = class Screen {
         const width = this.canvas.width;
         const height = this.canvas.height;
         this.context.drawImage(imageElement, 0, 0, width, height);
+    }
+
+    drawText(text, x, y) {
+        this.context.fillStyle = "#fff"; 
+        this.context.fillText(text, x, y);
     }
 };
 
