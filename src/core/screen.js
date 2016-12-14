@@ -23,12 +23,12 @@ const Screen = class Screen {
         return imageData;
     }
 
-    clear(color) {
+    clear() {
+        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    }
+
+    clearColor(color) {
         this.context.shadowBlur = 0;
-        if(!color) {
-            this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-            return;
-        }
         this.context.fillStyle = color;
         this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
     }
